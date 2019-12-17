@@ -1,0 +1,73 @@
+diff --git a/coretemp.c b/coretemp.c
+index 1ba65cc..e4c98be 100644
+--- a/coretemp.c
++++ b/coretemp.c
+@@ -532,11 +532,13 @@ static void coretemp_remove_core(struct platform_data *pdata, int indx)
+ {
+ 	struct temp_data *tdata = pdata->core_data[indx];
+ 
++	if(pdata->core_data[indx]) {
+ 	/* Remove the sysfs attributes */
+ 	sysfs_remove_group(&pdata->hwmon_dev->kobj, &tdata->attr_group);
+ 
+ 	kfree(pdata->core_data[indx]);
+ 	pdata->core_data[indx] = NULL;
++	}
+ }
+ 
+ static int coretemp_probe(struct platform_device *pdev)
+@@ -561,7 +563,6 @@ static int coretemp_remove(struct platform_device *pdev)
+ {
+ 	struct platform_data *pdata = platform_get_drvdata(pdev);
+ 	int i;
+-
+ 	for (i = MAX_CORE_DATA - 1; i >= 0; --i)
+ 		if (pdata->core_data[i])
+ 			coretemp_remove_core(pdata, i);
+@@ -617,7 +618,14 @@ static int coretemp_cpu_online(unsigned int cpu)
+ 	 * sensors. We check this bit only, all the early CPUs
+ 	 * without thermal sensors will be filtered out.
+ 	 */
+-	if (!cpu_has(c, X86_FEATURE_DTHERM))
++	//if (!cpu_has(c, X86_FEATURE_DTHERM))
++	//	return -ENODEV;
++
++	/*
++	 *  Since we are ignoring cpu-flags, we need at-least check for
++	 * Intel Processor
++	 */
++	if (c->x86_vendor != X86_VENDOR_INTEL)
+ 		return -ENODEV;
+ 
+ 	if (!pdev) {
+@@ -639,7 +647,7 @@ static int coretemp_cpu_online(unsigned int cpu)
+ 		 * Check whether pkgtemp support is available.
+ 		 * If so, add interfaces for pkgtemp.
+ 		 */
+-		if (cpu_has(c, X86_FEATURE_PTS))
++		//if (cpu_has(c, X86_FEATURE_PTS))
+ 			coretemp_add_core(pdev, cpu, 1);
+ 	}
+ 
+@@ -648,8 +656,8 @@ static int coretemp_cpu_online(unsigned int cpu)
+ 	 * Check whether a thread sibling is already online. If not add the
+ 	 * interface for this CPU core.
+ 	 */
+-	if (!cpumask_intersects(&pdata->cpumask, topology_sibling_cpumask(cpu)))
+-		coretemp_add_core(pdev, cpu, 0);
++	//if (!cpumask_intersects(&pdata->cpumask, topology_sibling_cpumask(cpu)))
++	//	coretemp_add_core(pdev, cpu, 0);
+ 
+ 	cpumask_set_cpu(cpu, &pdata->cpumask);
+ 	return 0;
+@@ -738,8 +746,8 @@ static int __init coretemp_init(void)
+ 	 * sensors. We check this bit only, all the early CPUs
+ 	 * without thermal sensors will be filtered out.
+ 	 */
+-	if (!x86_match_cpu(coretemp_ids))
+-		return -ENODEV;
++	//if (!x86_match_cpu(coretemp_ids))
++	//	return -ENODEV;
+ 
+ 	max_packages = topology_max_packages();
+ 	pkg_devices = kcalloc(max_packages, sizeof(struct platform_device *),
