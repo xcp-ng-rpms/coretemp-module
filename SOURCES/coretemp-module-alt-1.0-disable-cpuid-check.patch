@@ -1,3 +1,7 @@
+With Xen patch https://xenbits.xen.org/gitweb/?p=xen.git;a=commitdiff;h=72e038450d3d5de1a39f0cfa2d2b0f9b3d43c6c6
+Thermal and Performance information is now hidden from PV guests including Dom0.
+This module skips check of CPU flag and reads MSR directly for Intel Package Thermal Status.
+
 diff --git a/coretemp.c b/coretemp.c
 index 1ba65cc..e4c98be 100644
 --- a/coretemp.c
