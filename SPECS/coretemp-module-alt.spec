@@ -12,6 +12,7 @@ Source: %{name}-%{version}.tar.gz
 Patch0: coretemp-module-alt-1.0-disable-cpuid-check.patch
 
 BuildRequires: kernel-devel
+BuildRequires: gcc
 Requires: kernel-uname-r = %{kernel_version}
 Requires(post): /usr/sbin/depmod
 Requires(postun): /usr/sbin/depmod
