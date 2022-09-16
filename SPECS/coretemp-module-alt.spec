@@ -4,7 +4,7 @@
 Summary: coretemp kernel module with a workaround for Xen restrictions
 Name: coretemp-module-alt
 Version: 1.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: GPL
 #Source: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/hwmon/coretemp.c?h=v4.19.19
 Source: %{name}-%{version}.tar.gz
@@ -52,6 +52,9 @@ find %{buildroot}/lib/modules/%{uname} -name "*.ko" -type f | xargs chmod u+x
 /lib/modules/%{uname}/*/*.ko
 
 %changelog
+* Fri Sep 16 2022 Samuel Verschelde <stormi-xcp@ylix.fr> - 1.0-4
+- Rebuild for XCP-ng 8.3
+
 * Tue Jun 30 2020 Samuel Verschelde <stormi-xcp@ylix.fr> - 1.0-3
 - Rebuild for XCP-ng 8.2
 
